@@ -5,11 +5,17 @@
 class SelectScreen : public WelcomeScreen
 {
     private:
-        int selectedItem = 0;
+        int     selectedItem = 1;
+        bool    isArrowVisible = false; 
+        void    refreshSelectionArrow();
     protected:
-        void onSetup();
+        void    onSetup();
     public:
-        void onUpdate(long currentMillis);
+        int     getSelection();
+        void    onSelect(int selection);
+        void    confirmSelection();
+        void    onUpdate(long currentMillis);
+
 };
 
 #endif

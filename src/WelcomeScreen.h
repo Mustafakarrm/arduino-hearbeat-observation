@@ -12,6 +12,7 @@ class WelcomeScreen {
         long lastUpdate;
         bool isStarted = false;
         void onSetup();
+        void onQuit();
     public:
         WelcomeScreen();
         void pinScreen(Adafruit_SSD1306 &screen);
