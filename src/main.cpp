@@ -18,5 +18,5 @@ void setup(){
 }
 
 void loop(){
-  welcomeScreen.update(millis());
+  welcomeScreen.onUpdate(millis());
 }

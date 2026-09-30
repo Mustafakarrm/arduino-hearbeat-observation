@@ -4,19 +4,19 @@
 #include <Adafruit_SSD1306.h>
 
 class WelcomeScreen {
+    private:
+        bool isInverted = false;
     protected:
         Adafruit_SSD1306* display = nullptr;
         int* phase = nullptr;
         long lastUpdate;
         bool isStarted = false;
-        void setup();
-    private:
-        bool isInverted = false;
+        void onSetup();
     public:
         WelcomeScreen();
         void pinScreen(Adafruit_SSD1306 &screen);
         void pinScreenPhase(int &phase);
-        void update(long currentmillis);
+        void onUpdate(long currentmillis);
 };
 
 #endif
