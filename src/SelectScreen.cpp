@@ -48,7 +48,7 @@ void SelectScreen::onSetup()
         return;
     this->display->clearDisplay();
     this->display->setCursor(16,8);
-    this->display->print  (F("HBPM & Graph"));
+    this->display->print  (F("HBPM"));
     this->display->setCursor(16,16);
     this->display->print  (F("Stress Measure"));
     this->isStarted = true;

@@ -11,7 +11,8 @@ void HeartBeatMeasureScreen::onUpdate(long currentMillis){
     this->drawHeart();
     this->display->setCursor(48,16);
     if (this->isFingerOn){
-        
+        this->display->print(this->bpm);
+        this->display->print(F("  BPM"));
     }
     else
     {
