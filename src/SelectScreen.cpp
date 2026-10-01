@@ -55,5 +55,15 @@ void SelectScreen::onSetup()
 }
 
 void SelectScreen::confirmSelection(){
+    if (*this->phase != SELECT_SCREEN_PHASE)
+        return;
+    switch(this->getSelection()){
+        case(1):
+            *this->phase = HEARTBEAT_MEASURE_PHASE;
+            break;
+        case(2):
+            *this->phase = STRESS_MEASURE_PHASE;
+            break;
+    }
     this->onQuit();
 }

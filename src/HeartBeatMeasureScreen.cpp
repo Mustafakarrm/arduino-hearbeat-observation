@@ -1,78 +1,73 @@
 #include <HeartBeatMeasureScreen.h>
 
 void HeartBeatMeasureScreen::onUpdate(long currentMillis){
-    if (currentMillis - lastUpdate < HEARTBEAT_MEASURE_SCREEN_INTERVAL_UPDATE )
-    return;
-    this->drawDivider();
-    if (this->isFingerOn)
-    {
-        this->drawHeart(NORMAL_HEART);
+    if (this->display == nullptr || this->phase == nullptr)
+        return;
+    if (*this->phase != HEARTBEAT_MEASURE_PHASE)
+        return;
+    if (currentMillis - this->lastUpdate < HEARTBEAT_MEASURE_SCREEN_INTERVAL_UPDATE)
+        return;
+    this->onSetup();
+    this->drawHeart();
+    this->display->setCursor(48,16);
+    if (this->isFingerOn){
+        
     }
     else
     {
-        this->drawHeart(OUTLINED_HEART);
-        this->printPlaceFinger();
-        this->drawFlatLine();
+        this->display->print(F("Put Finger on"));
     }
+    this->display->display();
+    this->lastUpdate = currentMillis;
+}
+
+void HeartBeatMeasureScreen::onSetup(){
+    if (!this->isStarted)
+        this->isStarted = true;
+    this->display->clearDisplay();
+    this->display->setTextColor(SSD1306_WHITE);
+}
+
+
+
+void HeartBeatMeasureScreen::drawHeart(){
+    if (isFingerOn){
+        heartShape(32, 16, 6, SSD1306_WHITE);
+    }
+    else{
+        heartShape(32, 16, 6, SSD1306_WHITE);      
+        heartShape(32, 16 + 1, 6 - 2, SSD1306_BLACK); 
+    }
+}
+
+void HeartBeatMeasureScreen::doBeat(){
+    
+    heartShape(32, 16, 8, SSD1306_WHITE);      
     
     this->display->display();
 }
 
-
-
-void HeartBeatMeasureScreen::onSetup(){}
-
-void HeartBeatMeasureScreen::drawHeart(int state){
-    switch (state) {
-    case BEAT_HEART:
-        this->display->fillCircle(4, 5, 4, SSD1306_WHITE);
-        this->display->fillCircle(11, 5, 4, SSD1306_WHITE);
-        this->display->fillTriangle(0, 7, 15, 7, 7, 14, SSD1306_WHITE);
-        break;
-    case NORMAL_HEART:
-        this->display->fillCircle(4, 4, 3, SSD1306_WHITE);
-        this->display->fillCircle(10, 4, 3, SSD1306_WHITE);
-        this->display->fillTriangle(1, 5, 13, 5, 7, 11, SSD1306_WHITE);
-        break;
-    case OUTLINED_HEART:
-        this->display->drawCircle(4, 4, 3, SSD1306_WHITE);
-        this->display->drawCircle(10, 4, 3, SSD1306_WHITE);
-        this->display->drawLine(1, 5, 7, 11, SSD1306_WHITE);
-        this->display->drawLine(13, 5, 7, 11, SSD1306_WHITE);
-        break;
-  }
+void HeartBeatMeasureScreen::setBPM(int currentBPM){
+    this->bpm = currentBPM;
 }
 
-void HeartBeatMeasureScreen::setBPM(int bpm){
-    if (!this->isFingerOn)
-        return;
-    if (bpm == 0)
-        this->display->print(F("--"));
-    else
-        this->display->print(bpm);
+void HeartBeatMeasureScreen::setFinger(bool setFinger){
+    this->isFingerOn = setFinger;
 }
 
-void HeartBeatMeasureScreen::setFinger(bool isOn){
-    this->isFingerOn = isOn;
-}
+void HeartBeatMeasureScreen::heartShape(int cx, int cy, int r, uint16_t color) {
+  if (r < 1) 
+    return;
+  int cxL = cx - r;                  
+  int cxR = cx + r;                    
+  int cyC = cy - (int)(0.707 * r);     
 
-void HeartBeatMeasureScreen::doBeat(){
-    this->drawHeart(BEAT_HEART);
-    this->display->display();
-}
+  int dx  = (int)(0.707 * r);
+  int ly  = cyC + dx;                 
+  int bot = ly + (int)(1.707 * r);     
 
-void HeartBeatMeasureScreen::printPlaceFinger() {
-    this->display->setTextSize(1);
-    this->display->setCursor(0, 17);
-    this->display->print(F("Place"));
-    this->display->setCursor(0, 25);
-    this->display->print(F("finger"));
-}
-
-void HeartBeatMeasureScreen::drawDivider(){
-    this->display->drawFastVLine(PANEL_WIDTH, 0, SCREEN_HEIGHT, SSD1306_WHITE);
-}
-
-void HeartBeatMeasureScreen::drawFlatLine(){
-    this->display->drawFastHLine(0, GRAPH_TOP + GRAPH_HEIGHT / 2, SCREEN_WIDTH, SSD1306_WHITE);
+  this->display->fillCircle(cxL, cyC, r, color);
+  this->display->fillCircle(cxR, cyC, r, color);
+  this->display->fillRect(cxL, cyC, 2 * r, dx + 1, color);
+  this->display->fillTriangle(cxL - dx, ly, cxR + dx, ly, cx, bot, color);
 }

@@ -10,7 +10,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 WelcomeScreen welcomeScreen;
 SelectScreen selectScreen;
 HeartBeatMeasureScreen heartBeatMeasureScreen;
-int currentPhase = WELCOME_PHASE;
+int currentPhase = HEARTBEAT_MEASURE_PHASE;
 char input = 0;
 void setup(){
   Serial.begin(9600);
@@ -33,7 +33,8 @@ void loop(){
     input = Serial.read();
     if (input == '\n' || input == '\r')
     {
-      
+      selectScreen.confirmSelection();
+      heartBeatMeasureScreen.doBeat();
     }
     else
     {

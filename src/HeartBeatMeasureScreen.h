@@ -6,19 +6,17 @@
 class HeartBeatMeasureScreen : public WelcomeScreen
 {
     private:
-        void drawHeart(int state); 
-        void drawDivider();
-        void drawFlatLine();
-        void drawWaveForm(int minValue, int range);
+        int bpm = 0;
         bool isFingerOn = false;
-        void printPlaceFinger();
+        void drawHeart();
+        void heartShape(int cx, int cy, int r, uint16_t color);
     protected:
         void onSetup();
     public:
+        void onUpdate(long currentMillis);
+        void setFinger(bool isFingerOn);
         void setBPM(int bpm);
         void doBeat();
-        void setFinger(bool isFingerOn);
-        void onUpdate(long currentMillis);
 };
 
 #endif
